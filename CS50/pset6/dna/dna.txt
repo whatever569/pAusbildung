@@ -1,0 +1,16 @@
+// open files 
+	done
+// loop through my csv and store the rows in 'rows[]'
+	done
+// get length of rows[0]
+	done
+// from index [1 till length -1] get 'scan key'
+	done
+// loop through dna.txt and find the longest sequence of the current scan key and store the length of the sequence in a variable called 'currentcount'
+	done
+// compare 'currentCount' to 'biggestCount'store the scankey and count corrisponding to it in dict
+	done 
+// match the info in dict to a name
+	done
+	
+	
