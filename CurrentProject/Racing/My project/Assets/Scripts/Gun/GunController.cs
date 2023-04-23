@@ -85,6 +85,8 @@ public class GunController : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Space))
         {
             GameObject bullet = Instantiate(_bulletPrefab, _firePoint.position, _firePoint.rotation);
+            //make the bullet's name the same as the car's name
+            bullet.name = transform.parent.name;
             bullet.GetComponent<Rigidbody>().velocity = _firePoint.forward * _bulletSpeed;
             Destroy(bullet, _bulletLifeTime);
         }
