@@ -2,14 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Car : MonoBehaviour
 {
     public static int playerNumber = 0;
+    public static List<Car> players = new List<Car>();
     public string playerName;
     public int playerHealth = 100;
     public int score = 0;
 
     private void Awake() {
+        players.Add(this);
         playerNumber++;
         playerName = "Player " + playerNumber;
         gameObject.name = playerName;
