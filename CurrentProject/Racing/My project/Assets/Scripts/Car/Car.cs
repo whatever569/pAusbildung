@@ -6,8 +6,8 @@ public class Car : MonoBehaviour
 {
     public static int playerNumber = 0;
     public string playerName;
-    public int killScore = 0;
     public int playerHealth = 100;
+    public int score = 0;
 
     private void Awake() {
         playerNumber++;
@@ -20,7 +20,9 @@ public class Car : MonoBehaviour
         
         playerHealth -= damage;
         if (playerHealth <= 0) {
-            //Todo: add kill score to the player who shot the bullet
+            GameObject bulletOrigin = GameObject.Find(bulletOriginName);
+            Car bulletOriginScript = bulletOrigin.GetComponent<Car>();
+            bulletOriginScript.score++;
             Destroy(gameObject);
     }
 }
