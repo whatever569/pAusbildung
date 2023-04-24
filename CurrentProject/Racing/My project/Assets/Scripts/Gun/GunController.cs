@@ -45,7 +45,7 @@ public class GunController : MonoBehaviour
         transform.Rotate(Vector3.up * _yGunRotationControl * _yGunRotationSpeed * Time.deltaTime);
 
         // calculate the new xaxis rotation angle for the gun top
-        float newGunTopXRotation = _gunTopTransform.localEulerAngles.x - _xGunRotationControl * _xGunRotationSpeed * Time.deltaTime;
+        float newGunTopXRotation = _gunTopTransform.localEulerAngles.x + _xGunRotationControl * _xGunRotationSpeed * Time.deltaTime;
 
         // adjust the new angle to be within the range of -180 to 180 degrees, solving angle wrap around issues
         if (newGunTopXRotation > 180) newGunTopXRotation -= 360;

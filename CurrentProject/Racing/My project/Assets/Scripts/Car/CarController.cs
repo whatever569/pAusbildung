@@ -57,6 +57,7 @@ public class CarController : MonoBehaviour
     // Rotate the car around Y axis based on horizontal input
     private void RotateYAxis()
     {
+    
         if (_isGrounded && _verticalInput != 0)
         {
             float rotationAngle = yTurnSpeed * _horizontalInput * Time.deltaTime;
