@@ -1,20 +1,26 @@
 using UnityEngine;
-
+using System.Collections;
 public class CarController : MonoBehaviour
 {
+    //make z turning with horizontal input and when not grounded
+    //Make xturining with Vertical input and when not grounded\
+    //similar to gta
     //Optimized version of the car controller script on my github
     #region Variables
     // Configuration fields for car behavior
-    [SerializeField] private float acceleration = 3f, yTurnSpeed = 180f, defaultDrag = 3f, inAirDrag = 0.1f, zTurnSpeed = 2.5f, groundCheckDistance = 0.5f;
+    [SerializeField] private float acceleration = 3f, yTurnSpeed = 180f
+            , defaultDrag = 3f, inAirDrag = 0.1f
+                , rollSpeed = 2.5f, groundCheckDistance = 0.5f, turningDampening = 0.5f, minimumYTurnSpeed = 0.1f;
     [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private ForceMode zTurnForceMode = ForceMode.Impulse;
+    [SerializeField] private ForceMode rollForceMode = ForceMode.Impulse, jumpForceMode = ForceMode.Impulse;
+    [SerializeField] private float jumpForce = 5f;
     [SerializeField] private Transform groundCheckOrigin;
 
     // Internal fields for storing component references and input values
     private Transform _transform;
     private Rigidbody _rigidbody;
     private bool _isGrounded;
-    private float _verticalInput, _horizontalInput, _zInput;
+    private float _verticalInput, _horizontalInput;
     #endregion 
 
     // Initialize component references on Awake
@@ -23,12 +29,20 @@ public class CarController : MonoBehaviour
         _transform = GetComponent<Transform>();
         _rigidbody = GetComponent<Rigidbody>();
     }
+    private void Start() {
+        StartCoroutine(GroundChecking());
+    }
 
     // Get user input and check for grounding in Update
     private void Update()
     {
         GetUserInput();
-        CheckGround();
+    }
+
+//coroutine for ground checking, saves performance
+     IEnumerator GroundChecking()
+    {
+        while(true) {CheckGround(); yield return new WaitForSeconds(0.1f);}
     }
 
     // Perform physics-based movement and rotation in FixedUpdate
@@ -37,6 +51,7 @@ public class CarController : MonoBehaviour
         Rotate();
         Move();
         UpdateDrag();
+        Jumping();
     }
     #region Movement
     // Apply forward and backward movement based on user input
@@ -54,7 +69,7 @@ public class CarController : MonoBehaviour
         RotateZAxis();
     }
 
-    // Rotate the car around Y axis based on horizontal input
+    // Rotate the car around Y axis based on horizontal inputprivate void RotateYAxis()
     private void RotateYAxis()
     {
     
@@ -65,13 +80,12 @@ public class CarController : MonoBehaviour
         }
     }
 
-    // Rotate the car around Z axis based on Z input (E and C keys)
     private void RotateZAxis()
     {
         if (!_isGrounded)
         {
-            Vector3 torque = _transform.forward * zTurnSpeed * _zInput;
-            _rigidbody.AddTorque(torque, zTurnForceMode);
+            Vector3 torque = _transform.forward * rollSpeed * _horizontalInput;
+            _rigidbody.AddTorque(torque, rollForceMode);
         }
     }
 
@@ -80,7 +94,6 @@ public class CarController : MonoBehaviour
     {
         _verticalInput = Input.GetAxis("Vertical");
         _horizontalInput = Input.GetAxis("Horizontal");
-        _zInput = Input.GetKey(KeyCode.E) ? 1 : (Input.GetKey(KeyCode.C) ? -1 : 0);
     }
 
     // Check if the car is grounded using a raycast
@@ -93,6 +106,14 @@ public class CarController : MonoBehaviour
     private void UpdateDrag()
     {
         _rigidbody.drag = _isGrounded ? defaultDrag : inAirDrag;
+    }
+
+    private void Jumping()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
+        {
+            _rigidbody.AddForce(Vector3.up * jumpForce, jumpForceMode);
+        }
     }
     #endregion
 }

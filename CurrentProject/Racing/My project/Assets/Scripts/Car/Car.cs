@@ -9,11 +9,13 @@ public class Car : MonoBehaviour
     public static List<Car> players = new List<Car>();
     public string playerName;
     public int playerHealth = 100;
+    public Color playerColor;
     public int score = 0;
 
     private void Awake() {
         players.Add(this);
         playerNumber++;
+        if(playerName == "")
         playerName = "Player " + playerNumber;
         gameObject.name = playerName;
     }

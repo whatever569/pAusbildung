@@ -13,6 +13,8 @@ public class GunController : MonoBehaviour
     Transform _transform;
     [SerializeField] Transform _firePoint;
     Rigidbody _rigidbody;
+    //get parent gameobject
+    GameObject _parent;
 
     [Header("Bullet")]
     [SerializeField] GameObject _bulletPrefab;
@@ -26,6 +28,7 @@ public class GunController : MonoBehaviour
 
         _transform = GetComponent<Transform>();
         _rigidbody = GetComponent<Rigidbody>();
+        _parent = transform.parent.gameObject;
 
         XAxisRotationLimitCalculator();
 
@@ -82,12 +85,12 @@ public class GunController : MonoBehaviour
     void GunFire()
     {
     
-        if(Input.GetKeyDown(KeyCode.Space))
+        if(Input.GetKeyDown(KeyCode.Mouse0))
         {
             GameObject bullet = Instantiate(_bulletPrefab, _firePoint.position, _firePoint.rotation);
             //make the bullet's name the same as the car's name
             bullet.name = transform.parent.name;
-            bullet.GetComponent<Rigidbody>().velocity = _firePoint.forward * _bulletSpeed;
+            bullet.GetComponent<Rigidbody>().velocity = _firePoint.forward * _bulletSpeed + _parent.GetComponent<Rigidbody>().velocity;
             Destroy(bullet, _bulletLifeTime);
         }
 
