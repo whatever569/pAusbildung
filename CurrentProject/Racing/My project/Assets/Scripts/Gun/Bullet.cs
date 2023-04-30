@@ -2,14 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static Car;
-public class Bullet : MonoBehaviour
+
+public class Bullet : Projectile
 {
 
-    public static int damage = 10;
-   private void OnCollisionEnter(Collision other) {
-        if (other.gameObject.CompareTag("Enemy")) {
-            //send bullet origin name through take damage
-            other.gameObject.GetComponent<Car>().TakeDamage(damage, gameObject.name);
-        }
-    }
+    public override int Damage => 10;
+    public float speed = 20f;
+    public float lifeTime = 5f;
 }

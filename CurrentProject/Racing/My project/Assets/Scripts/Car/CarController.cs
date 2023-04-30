@@ -3,18 +3,17 @@ using System.Collections;
 public class CarController : MonoBehaviour
 {
     //make z turning with horizontal input and when not grounded
-    //Make xturining with Vertical input and when not grounded\
+    //Todo: Make xturining with Vertical input and when not grounded
     //similar to gta
-    //Optimized version of the car controller script on my github
+    //Optimized version of the car controller script on my github www.github.com/whatever569
+
     #region Variables
-    // Configuration fields for car behavior
     [SerializeField] private float acceleration = 3f, yTurnSpeed = 180f
             , defaultDrag = 3f, inAirDrag = 0.1f
-                , rollSpeed = 2.5f, groundCheckDistance = 0.5f, turningDampening = 0.5f, minimumYTurnSpeed = 0.1f;
+                , rollSpeed = 2.5f, groundCheckDistance = 0.5f, jumpForce = 5f;
+    [SerializeField] private Transform groundCheckOrigin;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private ForceMode rollForceMode = ForceMode.Impulse, jumpForceMode = ForceMode.Impulse;
-    [SerializeField] private float jumpForce = 5f;
-    [SerializeField] private Transform groundCheckOrigin;
 
     // Internal fields for storing component references and input values
     private Transform _transform;
@@ -29,7 +28,8 @@ public class CarController : MonoBehaviour
         _transform = GetComponent<Transform>();
         _rigidbody = GetComponent<Rigidbody>();
     }
-    private void Start() {
+    private void Start() 
+    {
         StartCoroutine(GroundChecking());
     }
 
@@ -39,13 +39,12 @@ public class CarController : MonoBehaviour
         GetUserInput();
     }
 
-//coroutine for ground checking, saves performance
-     IEnumerator GroundChecking()
+    //coroutine for ground checking, saves performance
+    IEnumerator GroundChecking()
     {
         while(true) {CheckGround(); yield return new WaitForSeconds(0.1f);}
     }
 
-    // Perform physics-based movement and rotation in FixedUpdate
     private void FixedUpdate()
     {
         Rotate();
@@ -116,4 +115,29 @@ public class CarController : MonoBehaviour
         }
     }
     #endregion
+
+    /// <summary>Get current CarController settings</summary>
+    public CarControllerSettings GetCarControllerSettings()
+    {
+        return new CarControllerSettings(acceleration, yTurnSpeed, defaultDrag, inAirDrag, rollSpeed, groundCheckDistance, jumpForce, groundCheckOrigin, groundLayer, rollForceMode, jumpForceMode);
+    }
+    
+    /// <summary>
+    /// Set the CarController settings to custom values, with a CarControllerSettings object
+    /// </summary>
+    ///Tip: You can use the GetCarControllerSettings() method to get the current settings, then edit them as needed and then use this method to set the settings
+    public void SetCarControllerSettings(CarControllerSettings settings)
+    {
+        this.acceleration = settings.Acceleration;
+        this.yTurnSpeed = settings.YTurnSpeed;
+        this.defaultDrag = settings.DefaultDrag;
+        this.inAirDrag = settings.InAirDrag;
+        this.rollSpeed = settings.RollSpeed;
+        this.groundCheckDistance = settings.GroundCheckDistance;
+        this.jumpForce = settings.JumpForce;
+        this.groundCheckOrigin = settings.GroundCheckOrigin;
+        this.groundLayer = settings.GroundLayer;
+        this.rollForceMode = settings.RollForceMode;
+        this.jumpForceMode = settings.JumpForceMode;
+    }
 }

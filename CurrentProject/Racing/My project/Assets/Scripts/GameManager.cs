@@ -30,12 +30,11 @@ else
 }
     private void Start() {
         StartCoroutine(StartGame(timeOfGameInMinutes));
-        StartCoroutine(TimerLabel());
     }
     public IEnumerator StartGame(float timeOfGameInMinutes)
     {
+        StartCoroutine(TimerLabel());
         yield return new WaitForSeconds(timeOfGameInMinutes * 60);
-        Debug.Log("Game Over");
         GameOver();
     }
 

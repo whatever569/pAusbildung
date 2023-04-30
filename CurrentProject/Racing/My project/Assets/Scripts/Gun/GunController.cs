@@ -18,7 +18,6 @@ public class GunController : MonoBehaviour
 
     [Header("Bullet")]
     [SerializeField] GameObject _bulletPrefab;
-    [SerializeField] float _bulletSpeed, _bulletLifeTime;
     float _xGunRotationControl, _yGunRotationControl, _xAxisRotationRange;
     #endregion
 
@@ -82,6 +81,7 @@ public class GunController : MonoBehaviour
         _xAxisRotationRange = 180 - Mathf.Atan(_b2 / _b1) * Mathf.Rad2Deg;
     }
 
+    //Todo: make this more modular
     void GunFire()
     {
     
@@ -90,12 +90,34 @@ public class GunController : MonoBehaviour
             GameObject bullet = Instantiate(_bulletPrefab, _firePoint.position, _firePoint.rotation);
             //make the bullet's name the same as the car's name
             bullet.name = transform.parent.name;
-            bullet.GetComponent<Rigidbody>().velocity = _firePoint.forward * _bulletSpeed + _parent.GetComponent<Rigidbody>().velocity;
-            Destroy(bullet, _bulletLifeTime);
+            bullet.GetComponent<Rigidbody>().velocity = _firePoint.forward * bullet.GetComponent<Bullet>().speed + _parent.GetComponent<Rigidbody>().velocity;
+            Destroy(bullet, bullet.GetComponent<Bullet>().lifeTime);
         }
 
 
     }
     #endregion
+
+    public GunControllerSettings GetGunControllerSettings()
+    {
+        return new GunControllerSettings(_xAxisRotationLimitTransform, _carTopTransform, _gunTopTransform, _xGunRotationSpeed, _yGunRotationSpeed, _transform, _firePoint, _rigidbody, _parent, _bulletPrefab, _xGunRotationControl, _yGunRotationControl, _xAxisRotationRange);
+    }
+
+    public void SetGunControllerSettings(GunControllerSettings settings)
+    {
+        _xAxisRotationLimitTransform = settings.XAxisRotationLimitTransform;
+        _carTopTransform = settings.CarTopTransform;
+        _gunTopTransform = settings.GunTopTransform;
+        _xGunRotationSpeed = settings.XGunRotationSpeed;
+        _yGunRotationSpeed = settings.YGunRotationSpeed;
+        _transform = settings.Transform;
+        _firePoint = settings.FirePoint;
+        _rigidbody = settings.Rigidbody;
+        _parent = settings.Parent;
+        _bulletPrefab = settings.BulletPrefab;
+        _xGunRotationControl = settings.XGunRotationControl;
+        _yGunRotationControl = settings.YGunRotationControl;
+        _xAxisRotationRange = settings.XAxisRotationRange;
+    }
 
 }
