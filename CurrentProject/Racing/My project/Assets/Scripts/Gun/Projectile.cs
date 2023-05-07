@@ -7,10 +7,12 @@ public class Projectile : MonoBehaviour
     public virtual int Damage => 10;
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.CompareTag("Enemy"))
+        if (other.gameObject.TryGetComponent<CustomTags>(out CustomTags customTags))
         {
-            //send bullet origin name through take damage
-            other.gameObject.GetComponent<Car>().TakeDamage(Damage, gameObject.name);
+            if (customTags.HasTag("Enemy"))
+            {
+                other.gameObject.GetComponent<Car>().TakeDamage(Damage, gameObject.name);
+            }
         }
     }
 }
